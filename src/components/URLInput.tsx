@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Upload, Plus, FileText, X } from 'lucide-react';
-import { parseCSV, validateURL } from '../utils/export';
+import { parseCSV } from '../utils/export';
+import { validateURL } from '../utils/validators';
 
 interface URLInputProps {
   onAddURLs: (urls: string[]) => void;
