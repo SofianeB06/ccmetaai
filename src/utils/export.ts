@@ -1,14 +1,5 @@
 import { URLItem } from '../types';
 
-export const validateURL = (url: string): boolean => {
-  try {
-    new URL(url);
-    return true;
-  } catch {
-    return false;
-  }
-};
-
 export const exportToCSV = (data: URLItem[]): string => {
   const headers = [
     'URL',

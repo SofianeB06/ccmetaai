@@ -27,11 +27,4 @@ export const extractMainContent = (html: string): string => {
   return html;
 };
 
-export const validateURL = (url: string): boolean => {
-  try {
-    new URL(url);
-    return true;
-  } catch {
-    return false;
-  }
-};
+export { validateURL } from './validators';
