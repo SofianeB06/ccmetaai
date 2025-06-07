@@ -11,7 +11,32 @@ import { generateSEOContent } from './utils/seoGenerator';
 import { exportToCSV, downloadFile } from './utils/export';
 
 function App() {
-  const [urls, setUrls] = useState<URLItem[]>([]);
+  const [urls, setUrls] = useState<URLItem[]>(() => {
+    const stored = localStorage.getItem('urls');
+    if (!stored) return [];
+    try {
+      const parsed = JSON.parse(stored);
+      if (!Array.isArray(parsed)) return [];
+      return parsed
+        .map((item: any) => {
+          if (
+            item &&
+            typeof item.id === 'string' &&
+            typeof item.url === 'string' &&
+            typeof item.status === 'string'
+          ) {
+            return {
+              ...item,
+              createdAt: item.createdAt ? new Date(item.createdAt) : new Date()
+            } as URLItem;
+          }
+          return null;
+        })
+        .filter(Boolean) as URLItem[];
+    } catch {
+      return [];
+    }
+  });
   const [isProcessing, setIsProcessing] = useState(false);
   const [selectedUrl, setSelectedUrl] = useState<URLItem | null>(null);
   const [darkMode, setDarkMode] = useState(() => {
@@ -27,6 +52,11 @@ function App() {
     }
     localStorage.setItem('darkMode', darkMode.toString());
   }, [darkMode]);
+
+  // Persist URLs to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('urls', JSON.stringify(urls));
+  }, [urls]);
 
   const addURLs = (newUrls: string[]) => {
     const urlItems: URLItem[] = newUrls.map(url => ({
