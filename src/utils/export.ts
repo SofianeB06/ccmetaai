@@ -64,3 +64,11 @@ export const parseCSV = (csvText: string): string[] => {
   
   return [...new Set(urls)]; // Remove duplicates
 };
+
+export const saveContentAsTxt = (url: string, content: string) => {
+  const sanitized = url
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '_')
+    .replace(/^_+|_+$/g, '');
+  downloadFile(content, `${sanitized || 'page'}.txt`, 'text/plain');
+};

@@ -9,21 +9,27 @@ interface URLInputProps {
 }
 
 const URLInput: React.FC<URLInputProps> = ({ onAddURLs, isProcessing }) => {
-  const [manualUrl, setManualUrl] = useState('');
+  const [manualUrls, setManualUrls] = useState('');
   const [dragOver, setDragOver] = useState(false);
   const [error, setError] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleManualAdd = () => {
-    if (!manualUrl.trim()) return;
-    
-    if (!validateURL(manualUrl)) {
-      setError('URL invalide. Veuillez entrer une URL complète (ex: https://example.com)');
+    const rawUrls = manualUrls
+      .split(/[,\n\s]+/)
+      .map(u => u.trim())
+      .filter(Boolean);
+
+    if (rawUrls.length === 0) return;
+
+    const invalid = rawUrls.filter(url => !validateURL(url));
+    if (invalid.length > 0) {
+      setError('Une ou plusieurs URLs sont invalides');
       return;
     }
-    
-    onAddURLs([manualUrl]);
-    setManualUrl('');
+
+    onAddURLs(rawUrls);
+    setManualUrls('');
     setError('');
   };
 
@@ -91,21 +97,19 @@ const URLInput: React.FC<URLInputProps> = ({ onAddURLs, isProcessing }) => {
       {/* Manual URL Input */}
       <div className="mb-6">
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-          Ajouter une URL manuellement
+          Ajouter des URLs manuellement
         </label>
         <div className="flex space-x-2">
-          <input
-            type="url"
-            value={manualUrl}
-            onChange={(e) => setManualUrl(e.target.value)}
-            placeholder="https://example.com"
-            className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-800 dark:text-white"
+          <textarea
+            value={manualUrls}
+            onChange={(e) => setManualUrls(e.target.value)}
+            placeholder="https://example.com\nhttps://exemple.org"
+            className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-800 dark:text-white h-24 resize-none"
             disabled={isProcessing}
-            onKeyPress={(e) => e.key === 'Enter' && handleManualAdd()}
           />
           <button
             onClick={handleManualAdd}
-            disabled={isProcessing || !manualUrl.trim()}
+            disabled={isProcessing || !manualUrls.trim()}
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2 transition-colors"
           >
             <Plus className="w-4 h-4" />
