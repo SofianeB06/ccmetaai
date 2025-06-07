@@ -1,5 +1,6 @@
-import { describe, it, expect } from 'vitest';
-import { exportToCSV } from '../export';
+import { describe, it, expect, vi } from 'vitest';
+import * as exportUtils from '../export';
+const { exportToCSV, saveContentAsTxt } = exportUtils;
 import type { URLItem } from '../../types';
 
 describe('exportToCSV', () => {
@@ -19,5 +20,14 @@ describe('exportToCSV', () => {
     const csv = exportToCSV(items);
     expect(csv.startsWith('"URL","Status","Framework"')).toBe(true);
     expect(csv).toContain('"https://example.com"');
+  });
+
+  it('saves content with sanitized filename', () => {
+    const spy = vi.spyOn(exportUtils, 'downloadFile');
+    saveContentAsTxt('https://Example.com/some/path', 'hello');
+    expect(spy).toHaveBeenCalled();
+    const args = (spy as any).mock.calls[0];
+    expect(args[1]).toMatch(/example_com_some_path\.txt$/);
+    spy.mockRestore();
   });
 });

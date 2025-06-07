@@ -8,7 +8,7 @@ import ResultsModal from './components/ResultsModal';
 import { scrapeURL, extractMainContent } from './utils/scraper';
 import { detectFramework } from './utils/frameworks';
 import { generateSEOContent } from './utils/seoGenerator';
-import { exportToCSV, downloadFile } from './utils/export';
+import { exportToCSV, downloadFile, saveContentAsTxt } from './utils/export';
 
 function App() {
   const [urls, setUrls] = useState<URLItem[]>(() => {
@@ -88,6 +88,8 @@ function App() {
       // Scrape content
       const htmlContent = await scrapeURL(urlItem.url);
       const textContent = extractMainContent(htmlContent);
+
+      saveContentAsTxt(urlItem.url, textContent);
       
       // Detect framework
       const framework = detectFramework(textContent);
