@@ -39,3 +39,8 @@ npm run preview
 4. **View Results** – For each processed URL, open the results modal to copy generated titles and descriptions and view validation information. Dark mode can be toggled in the header.
 
 This project is intended as a front‑end prototype; scraping and analysis are simulated in `src/utils`.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
