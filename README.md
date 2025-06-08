@@ -4,7 +4,7 @@ CCMeta.ai is a React and TypeScript application for generating SEO metadata. You
 
 ## Installation
 
-1. Ensure you have **Node.js 18** or later installed.
+1. Ensure you have **Node.js 18** or later installed. The `package.json` file specifies this requirement using an `engines` field.
 2. Install dependencies:
 
 ```bash
